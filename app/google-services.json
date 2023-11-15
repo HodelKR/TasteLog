@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "51134697132",
+    "project_id": "tastelog-dfbba",
+    "storage_bucket": "tastelog-dfbba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:51134697132:android:7e11bf609fc0e60a639909",
+        "android_client_info": {
+          "package_name": "com.example.tastelog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "51134697132-ded9innn63hir5bbmo2ndek86fiugnhl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tastelog",
+            "certificate_hash": "a6492578ca70e4e96822f0e46fe3b3e50ee752bf"
+          }
+        },
+        {
+          "client_id": "51134697132-ded9innn63hir5bbmo2ndek86fiugnhl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5F3wOSF3za9g-Zpwg04NMS2PmQdBHY-M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "51134697132-ded9innn63hir5bbmo2ndek86fiugnhl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

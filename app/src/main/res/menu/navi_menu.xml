@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home"
+        android:title="홈"
+        android:icon="@drawable/ic_home"/>
+    <item
+        android:id="@+id/friend"
+        android:title="친구"
+        android:icon="@drawable/ic_friend"/>
+    <item
+        android:id="@+id/bookmark"
+        android:title="북마크"
+        android:icon="@drawable/ic_bookmark"/>
+    <item
+        android:id="@+id/setting"
+        android:title="설정"
+        android:icon="@drawable/ic_setting"/>
+
+</menu>

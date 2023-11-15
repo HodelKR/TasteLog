@@ -2,11 +2,13 @@ package com.example.tastelog;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -26,9 +28,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import androidx.fragment.app.Fragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "TasteLog";
+    private static final String TAG = "TasteLog[MainActivity]";
     private FirebaseAuth mAuth;
 
     @Override
@@ -37,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+
+
     }
 
     @Override
@@ -52,6 +60,9 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "아직 로그인 안했음");
             updateUI();
         }
+        Intent intent = new Intent(this, NaviActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void updateUI() {
@@ -59,4 +70,5 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
 }

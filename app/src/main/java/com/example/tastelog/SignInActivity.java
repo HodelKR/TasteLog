@@ -33,7 +33,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 public class SignInActivity extends AppCompatActivity {
 
-    private static final String TAG = "TasteLog";
+    private static final String TAG = "TasteLog[SignInActivity]";
 
     private SignInClient oneTapClient;
     private BeginSignInRequest signInRequest;
@@ -47,6 +47,8 @@ public class SignInActivity extends AppCompatActivity {
 
         configOneTapSignUpOrSignInClient();
         initFirebaseAuth();
+
+
 
         SignInButton googleSignInButton = findViewById(R.id.googleSignInBtn);
 

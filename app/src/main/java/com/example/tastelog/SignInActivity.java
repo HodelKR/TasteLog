@@ -65,6 +65,7 @@ public class SignInActivity extends AppCompatActivity {
         if (currentUser != null) {
             Log.d(TAG, "이미 로그인 했음");
             updateUI(currentUser); // Go to MainActivity
+            finish();
         } else {
             Log.d(TAG, "아직 로그인 안했음");
         }

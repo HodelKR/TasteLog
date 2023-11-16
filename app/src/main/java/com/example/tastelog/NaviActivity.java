@@ -26,6 +26,7 @@ public class NaviActivity extends AppCompatActivity {
 
         setFragment(TAG_HOME, new HomeFragment());
 
+
         binding.navigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
@@ -41,6 +42,9 @@ public class NaviActivity extends AppCompatActivity {
 
             return true;
         });
+
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setTitle("Home Screen");
     }
 
     protected void setFragment(String tag, Fragment fragment){

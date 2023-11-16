@@ -4,35 +4,139 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/whitegray">
+    android:background="@color/whitegray"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="48dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/all_edge"
         android:orientation="vertical"
-        android:background="@drawable/edge">
+        android:padding="15dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="layout" />
+            android:layout_marginVertical="5dp"
+            android:text="계정"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
-        <Button
+        <TextView
+            android:id="@+id/setting_password_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:clickable="true"
             android:text="비밀번호 변경"
-            android:background="@color/whitegray"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/setting_email_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:clickable="true"
+            android:text="이메일 변경"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/setting_account_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:clickable="true"
+            android:text="연결된 계정 관리"
+            android:textSize="16sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/all_edge"
+        android:orientation="vertical"
+        android:padding="15dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:text="앱 설정"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/setting_theme_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:clickable="true"
+            android:text="테마"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/setting_noti_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:clickable="true"
+            android:text="알림 설정"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/setting_language_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:clickable="true"
+            android:text="언어 설정"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/all_edge"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:text="기타"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/inquiry_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:clickable="true"
+            android:text="문의하기"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/withdraw_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:clickable="true"
+            android:text="회원 탈퇴"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/logout_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
+            android:clickable="true"
+            android:text="로그아웃"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </LinearLayout>

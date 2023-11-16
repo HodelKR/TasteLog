@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/edge" />
+        android:background="@drawable/vertical_edge" />
 
     <FrameLayout
         android:layout_marginTop="48dp"

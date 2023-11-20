@@ -26,25 +26,30 @@ public class NaviActivity extends AppCompatActivity {
 
         setFragment(TAG_HOME, new HomeFragment());
 
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setTitle("Home Screen");
 
         binding.navigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
             if (itemId == R.id.home) {
                 setFragment(TAG_HOME, new HomeFragment());
+                getSupportActionBar().setTitle("Home Screen");
             } else if (itemId == R.id.friend) {
                 setFragment(TAG_FRIEND, new FriendFragment());
+                getSupportActionBar().setTitle("Friend Screen");
             } else if (itemId == R.id.bookmark) {
                 setFragment(TAG_BOOKMARK, new BookmarkFragment());
+                getSupportActionBar().setTitle("Bookmark Screen");
             } else if (itemId == R.id.setting) {
                 setFragment(TAG_SETTING, new SettingFragment());
+                getSupportActionBar().setTitle("Setting Screen");
             }
 
             return true;
         });
 
-        setSupportActionBar(binding.toolbar);
-        getSupportActionBar().setTitle("Home Screen");
+
     }
 
     protected void setFragment(String tag, Fragment fragment){

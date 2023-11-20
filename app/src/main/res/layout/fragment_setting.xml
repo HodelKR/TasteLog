@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -10,29 +13,130 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="48dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
+        android:padding="16dp"
         android:orientation="vertical"
-        android:background="@drawable/edge">
+        android:background="@drawable/setting_content_line">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="layout" />
+            android:text="계정"
+            android:textColor="@color/black"
+            android:textSize="20dp"/>
 
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="비밀번호 변경"
-            android:background="@color/whitegray"/>
+            android:backgroundTint="@color/whitegray"
+            android:textColor="@color/black"
+            android:gravity="left"/>
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이메일 변경"
+            android:backgroundTint="@color/whitegray"
+            android:textColor="@color/black"
+            android:gravity="left"/>
         <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="연결된 계정 관리"
+            android:backgroundTint="@color/whitegray"
+            android:textColor="@color/black"
+            android:gravity="left"/>
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:background="@drawable/setting_content_line">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="앱 설정"
+            android:textColor="@color/black"
+            android:textSize="20dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="테마"
+            android:backgroundTint="@color/whitegray"
+            android:textColor="@color/black"
+            android:gravity="left"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="알림 설정"
+            android:backgroundTint="@color/whitegray"
+            android:textColor="@color/black"
+            android:gravity="left"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="언어 설정"
+            android:backgroundTint="@color/whitegray"
+            android:textColor="@color/black"
+            android:gravity="left"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
+        android:padding="16dp"
+        android:orientation="vertical"
+        android:background="@drawable/setting_content_line">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="기타"
+            android:textColor="@color/black"
+            android:textSize="20dp"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="문의하기"
+            android:backgroundTint="@color/whitegray"
+            android:textColor="@color/black"
+            android:gravity="left"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="회원 탈퇴"
+            android:backgroundTint="@color/whitegray"
+            android:textColor="@color/black"
+            android:gravity="left"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="로그아웃"
+            android:backgroundTint="@color/whitegray"
+            android:textColor="@color/black"
+            android:gravity="left"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="128dp" />
 
 </LinearLayout>
+
+</ScrollView>

@@ -10,11 +10,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.tastelog.databinding.FragmentSettingBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /**
@@ -69,6 +73,45 @@ public class SettingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_setting, container, false);
+//        return inflater.inflate(R.layout.fragment_setting, container, false);
+        FragmentSettingBinding binding = FragmentSettingBinding.inflate(getLayoutInflater());
+
+
+        binding.changePasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.changePasswordView.setVisibility(View.VISIBLE);
+            }
+        });
+        binding.closeChangePasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.changePasswordView.setVisibility(View.INVISIBLE);
+            }
+        });
+        binding.concatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.concatView.setVisibility(View.VISIBLE);
+            }
+        });
+        binding.closeConcatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.concatView.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        binding.singOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOut();
+            }
+        });
+
+        return binding.getRoot();
+    }
+    private void signOut(){
+
     }
 }

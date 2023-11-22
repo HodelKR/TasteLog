@@ -1,48 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
-
-    <TextView
-        android:textSize="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TasteLog"
-        android:layout_marginBottom="16dp"
-        android:gravity="center"/>
-
-    <EditText
-        android:id="@+id/signInId"
-        android:inputType="textEmailAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <EditText
-        android:id="@+id/signInPw"
-        android:inputType="textPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:id="@+id/signInBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sign In"/>
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:background="@color/white"
+        android:layout_margin="20dp"
+        android:orientation="vertical">
+        <TextView
+            android:textSize="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TasteLog"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"/>
 
+        <EditText
+            android:id="@+id/id"
+            android:inputType="textEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/googleSignInBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/pw"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
+        <Button
+            android:id="@+id/sign_in_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="로그인"/>
+
+        <Button
+            android:id="@+id/sign_up_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="회원가입"/>
     </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/sign_up_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        android:background="@color/white"
+        android:visibility="invisible">
+        <TextView
+            android:textSize="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TasteLog"
+            android:layout_margin="100dp"
+            android:gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="회원가입"
+            android:textSize="16dp"
+            android:padding="20dp"
+            android:gravity="center"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="이메일"/>
+
+        <EditText
+            android:id="@+id/sign_up_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="비밀번호"/>
+
+        <EditText
+            android:id="@+id/sign_up_pw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="비밀번호 확인"/>
+
+        <EditText
+            android:id="@+id/sign_up_check_pw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/sign_up_btn2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="회원가입"/>
+        <Button
+            android:id="@+id/close_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="취소"/>
+
+    </LinearLayout>
+</FrameLayout>

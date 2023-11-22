@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-
     }
 
     @Override
@@ -56,19 +55,14 @@ public class MainActivity extends AppCompatActivity {
 
         if (currentUser != null) {
             Log.d(TAG, "이미 로그인 했음");
+            Intent intent = new Intent(this, NaviActivity.class);
+            startActivity(intent);
+            finish();
         } else {
             Log.d(TAG, "아직 로그인 안했음");
-            updateUI();
+            Intent intent = new Intent(this, SignInActivity.class);
+            startActivity(intent);
+            finish();
         }
-        Intent intent = new Intent(this, NaviActivity.class);
-        startActivity(intent);
-        finish();
     }
-
-    private void updateUI() {
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
 }

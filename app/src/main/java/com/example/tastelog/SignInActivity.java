@@ -13,7 +13,12 @@ import android.content.IntentSender;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import com.example.tastelog.databinding.ActivitySignInBinding;
 import com.google.android.gms.auth.api.identity.BeginSignInRequest;
 import com.google.android.gms.auth.api.identity.BeginSignInResult;
 import com.google.android.gms.auth.api.identity.Identity;
@@ -30,6 +35,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -39,110 +50,117 @@ public class SignInActivity extends AppCompatActivity {
     private BeginSignInRequest signInRequest;
     private ActivityResultLauncher<IntentSenderRequest> oneTapUILauncher;
     private FirebaseAuth mAuth;
-
+    private FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+//        setContentView(R.layout.activity_sign_in);
 
-        configOneTapSignUpOrSignInClient();
-        initFirebaseAuth();
+        ActivitySignInBinding binding = ActivitySignInBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
+        initFirebaseAuthAndFireStore();
+        binding.signInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = binding.id.getText().toString();
+                String password = binding.pw.getText().toString();
 
+                signIn(email, password);
+            }
+        });
+        binding.signUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.signUpView.setVisibility(View.VISIBLE);
+            }
+        });
 
-        SignInButton googleSignInButton = findViewById(R.id.googleSignInBtn);
+        binding.closeSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                binding.signUpView.setVisibility(View.INVISIBLE);
+            }
+        });
 
-        googleSignInButton.setOnClickListener(v -> signIn());
+        binding.signUpBtn2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = binding.signUpId.getText().toString();
+                String password = binding.signUpPw.getText().toString();
+                signUp(email, password);
+            }
+        });
+
     }
-
-    @Override
-    protected void onStart() {
+    private void initFirebaseAuthAndFireStore() {
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+    }
+    public void onStart() {
         super.onStart();
-
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
         if (currentUser != null) {
-            Log.d(TAG, "이미 로그인 했음");
-            updateUI(currentUser); // Go to MainActivity
-            finish();
-        } else {
-            Log.d(TAG, "아직 로그인 안했음");
+            updateUI(currentUser);
         }
     }
 
-    private void configOneTapSignUpOrSignInClient() {
-        oneTapClient = Identity.getSignInClient(this);
-
-        signInRequest = BeginSignInRequest.builder()
-                .setGoogleIdTokenRequestOptions(BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                        .setSupported(true)
-                        // Your server's client ID, not your Android client ID.
-                        .setServerClientId(getString(R.string.default_web_client_id))
-                        //.setFilterByAuthorizedAccounts(true) // Only show accounts previously used to sign in.
-                        .setFilterByAuthorizedAccounts(false) // Show all accounts on the device.
-                        .build())
-                .build();
-
-        oneTapUILauncher = registerForActivityResult(new ActivityResultContracts.StartIntentSenderForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                try {
-                    SignInCredential credential = oneTapClient.getSignInCredentialFromIntent(result.getData());
-                    String idToken = credential.getGoogleIdToken();
-                    if (idToken != null) {
-                        // Got an ID token from Google. Use it to authenticate
-                        // with Firebase.
-                        AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
-                        mAuth.signInWithCredential(firebaseCredential)
-                                .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            Log.d(TAG, "signInWithCredential:success");
-                                            FirebaseUser user = mAuth.getCurrentUser();
-                                            updateUI(user);
-                                        } else {
-                                            // If sign in fails, display a message to the user.
-                                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                                            updateUI(null);
-                                        }
-                                    }
-                                });
-                    }
-                } catch (ApiException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-    }
-
-    private void initFirebaseAuth() {
-        mAuth = FirebaseAuth.getInstance();
-    }
-
-    // https://developers.google.com/identity/one-tap/android/get-saved-credentials
-    private void signIn() {
-        // check whether the user has any saved credentials for your app. -> onSuccess or onFailure
-        oneTapClient.beginSignIn(signInRequest)
-                .addOnSuccessListener(this, new OnSuccessListener<BeginSignInResult>() {
+    private void signIn(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onSuccess(BeginSignInResult beginSignInResult) {
-                        IntentSender intentSender = beginSignInResult.getPendingIntent().getIntentSender();
-                        IntentSenderRequest intentSenderRequest = new IntentSenderRequest.Builder(intentSender).build();
-                        oneTapUILauncher.launch(intentSenderRequest);
-                    }
-                })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // No saved credentials found. Launch the One Tap sign-up flow, or
-                        // do nothing and continue presenting the signed-out UI.
-                        Log.d(TAG, e.getLocalizedMessage());
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            //Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Log.d(TAG, "signInWithEmail:failure");
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
                     }
                 });
     }
+
+    private void signUp(String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            addUser(user);
+                            updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            //Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Log.d(TAG, "createUserWithEmail:failure");
+                            Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI(null);
+                        }
+                    }
+                });
+    }
+
+    private void addUser(FirebaseUser user){
+        CollectionReference users = db.collection("user");
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("uid", user.getUid());
+        userData.put("email", user.getEmail());
+        userData.put("timestamp", FieldValue.serverTimestamp());
+        users.document(user.getUid()).set(userData);
+    }
+
 
     private void updateUI(FirebaseUser user) {
         if (user != null) {

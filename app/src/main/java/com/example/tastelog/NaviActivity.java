@@ -4,7 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import android.os.Bundle;
 
 import com.example.tastelog.databinding.ActivityNaviBinding;
@@ -15,6 +22,7 @@ public class NaviActivity extends AppCompatActivity {
     private static final String TAG_FRIEND = "FriendFragment";
     private static final String TAG_BOOKMARK = "BookmarkFragment";
     private static final String TAG_SETTING = "SettingFragment";
+    private FirebaseFirestore db;
 
     private ActivityNaviBinding binding;
 
@@ -23,6 +31,8 @@ public class NaviActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityNaviBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        initializeCloudFirestore();
 
         setFragment(TAG_HOME, new HomeFragment());
 
@@ -50,6 +60,10 @@ public class NaviActivity extends AppCompatActivity {
         });
 
 
+    }
+    private void initializeCloudFirestore() {
+        // Access a Cloud Firestore instance from your Activity
+        db = FirebaseFirestore.getInstance();
     }
 
     protected void setFragment(String tag, Fragment fragment){

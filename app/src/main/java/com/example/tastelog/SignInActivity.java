@@ -86,9 +86,10 @@ public class SignInActivity extends AppCompatActivity {
         binding.signUpBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String name = binding.signUpName.getText().toString();
                 String email = binding.signUpId.getText().toString();
                 String password = binding.signUpPw.getText().toString();
-                signUp(email, password);
+                signUp(name, email, password);
             }
         });
 
@@ -129,7 +130,7 @@ public class SignInActivity extends AppCompatActivity {
                 });
     }
 
-    private void signUp(String email, String password) {
+    private void signUp(String name, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -138,7 +139,7 @@ public class SignInActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            addUser(user);
+                            addUser(name, user);
                             updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -152,9 +153,10 @@ public class SignInActivity extends AppCompatActivity {
                 });
     }
 
-    private void addUser(FirebaseUser user){
+    private void addUser(String name, FirebaseUser user){
         CollectionReference users = db.collection("user");
         Map<String, Object> userData = new HashMap<>();
+        userData.put("name", name);
         userData.put("uid", user.getUid());
         userData.put("email", user.getEmail());
         userData.put("timestamp", FieldValue.serverTimestamp());

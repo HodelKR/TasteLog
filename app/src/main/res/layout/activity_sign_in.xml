@@ -71,10 +71,23 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
+            android:text="이름"/>
+
+        <EditText
+            android:id="@+id/sign_up_name"
+            android:inputType="textEmailAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:text="이메일"/>
 
         <EditText
             android:id="@+id/sign_up_id"
+            android:inputType="textEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -87,6 +100,7 @@
 
         <EditText
             android:id="@+id/sign_up_pw"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
@@ -99,6 +113,7 @@
 
         <EditText
             android:id="@+id/sign_up_check_pw"
+            android:inputType="textPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <Button

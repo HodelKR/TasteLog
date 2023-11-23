@@ -128,12 +128,6 @@ public class SettingFragment extends Fragment {
             }
         });
 
-        binding.singOutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         return binding.getRoot();
     }

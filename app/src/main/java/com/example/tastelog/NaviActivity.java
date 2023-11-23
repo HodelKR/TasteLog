@@ -1,10 +1,16 @@
 package com.example.tastelog;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -13,16 +19,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.tastelog.databinding.ActivityNaviBinding;
 
 public class NaviActivity extends AppCompatActivity {
 
+    private static final String TAG = "TasteLog[NaviActivity]";
     private static final String TAG_HOME = "HomeFragment";
     private static final String TAG_FRIEND = "FriendFragment";
     private static final String TAG_BOOKMARK = "BookmarkFragment";
     private static final String TAG_SETTING = "SettingFragment";
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     private ActivityNaviBinding binding;
 
@@ -32,7 +41,7 @@ public class NaviActivity extends AppCompatActivity {
         binding = ActivityNaviBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        initializeCloudFirestore();
+        initFirebaseAuthAndFireStore();
 
         setFragment(TAG_HOME, new HomeFragment());
 
@@ -61,8 +70,9 @@ public class NaviActivity extends AppCompatActivity {
 
 
     }
-    private void initializeCloudFirestore() {
-        // Access a Cloud Firestore instance from your Activity
+    private void initFirebaseAuthAndFireStore() {
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
     }
 
@@ -111,5 +121,35 @@ public class NaviActivity extends AppCompatActivity {
             }
         }
         fragmentTransaction.commitAllowingStateLoss();
+    }
+
+    public void getUserName(FirebaseUser user, final OnUserNameFetchedListener listener) {
+        String uid = user.getUid().toString();
+        CollectionReference userCollection = db.collection("user");
+
+        userCollection.document(uid).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot userDocument = task.getResult();
+                            if (userDocument.exists()) {
+                                String userName = userDocument.getString("name");
+                                Log.d(TAG, "User Name: " + userName);
+                                listener.onUserNameFetched(userName);
+                            } else {
+                                Log.d(TAG, "User document not found.");
+                                listener.onUserNameFetched(null);
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting user document.", task.getException());
+                            listener.onUserNameFetched(null);
+                        }
+                    }
+                });
+    }
+
+    public interface OnUserNameFetchedListener {
+        void onUserNameFetched(String userName);
     }
 }

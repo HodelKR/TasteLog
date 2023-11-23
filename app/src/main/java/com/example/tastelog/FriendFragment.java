@@ -47,7 +47,8 @@ public class FriendFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private FirestoreRecyclerAdapter adapter;
+    private FragmentFriendBinding binding;
+    private FriendAdapter adapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -88,7 +89,7 @@ public class FriendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        FragmentFriendBinding binding = FragmentFriendBinding.inflate(getLayoutInflater());
+        binding = FragmentFriendBinding.inflate(getLayoutInflater());
 
         initFirebaseAuthAndFireStore();
 
@@ -96,8 +97,9 @@ public class FriendFragment extends Fragment {
 
 
         binding.friendRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        binding.friendRecyclerview.setAdapter(new FriendAdapter(getData()));
 
+        adapter = new FriendAdapter(getData());
+        binding.friendRecyclerview.setAdapter(adapter);
         return binding.getRoot();
     }
 
@@ -105,6 +107,13 @@ public class FriendFragment extends Fragment {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.setData(getData());
+        adapter.notifyDataSetChanged();
     }
 
     private class FriendViewHolder extends RecyclerView.ViewHolder{
@@ -136,6 +145,10 @@ public class FriendFragment extends Fragment {
 
         @Override
         public int getItemCount() { return list.size();}
+
+        public void setData(List<String> newData) {
+            this.list = newData;
+        }
     }
 
     private List<String> getData() {

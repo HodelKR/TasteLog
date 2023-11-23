@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.tastelog.databinding.FragmentSettingBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,15 +33,20 @@ import com.google.firebase.auth.FirebaseAuth;
 public class SettingFragment extends Fragment {
 
     private BottomNavigationView bottomNavigationView;
+    private static final String TAG = "TasteLog[SettingFragment]";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private FragmentSettingBinding binding;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
 
     public SettingFragment() {
         // Required empty public constructor
@@ -76,8 +83,18 @@ public class SettingFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 //        return inflater.inflate(R.layout.fragment_setting, container, false);
-        FragmentSettingBinding binding = FragmentSettingBinding.inflate(getLayoutInflater());
-
+        binding = FragmentSettingBinding.inflate(getLayoutInflater());
+        initFirebaseAuthAndFireStore();
+        ((NaviActivity) requireActivity()).getUserName(mAuth.getCurrentUser(), new NaviActivity.OnUserNameFetchedListener() {
+            @Override
+            public void onUserNameFetched(String userName) {
+                if (userName != null) {
+                    binding.userId.setText(userName);
+                } else {
+                    Log.d(TAG, "User name not found");
+                }
+            }
+        });
 
         binding.changePasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,8 +128,22 @@ public class SettingFragment extends Fragment {
             }
         });
 
+        binding.singOutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         return binding.getRoot();
     }
+
+    private void initFirebaseAuthAndFireStore() {
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+    }
+
     private void signOut(){
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();

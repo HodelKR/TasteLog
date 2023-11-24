@@ -8,7 +8,7 @@ plugins {
 android {
     signingConfigs {
         create("tastelog") {
-            storeFile = file("/Users/bomin/AndroidStudioProjects/TasteLog/tastelog.jks")
+            storeFile = file("../tastelog.jks")
             storePassword = "tastelog"
             keyAlias = "tastelog"
             keyPassword = "tastelog"

@@ -1,8 +1,11 @@
 package com.example.tastelog;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -11,9 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,9 +28,21 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.tastelog.databinding.FragmentSettingBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -118,6 +137,14 @@ public class SettingFragment extends Fragment {
             }
         });
 
+        binding.addFriendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAddFriendPopup();
+            }
+        });
+
+
 
         return binding.getRoot();
     }
@@ -134,5 +161,80 @@ public class SettingFragment extends Fragment {
         Intent intent = new Intent(getActivity(), SignInActivity.class);
         startActivity(intent);
         getActivity().finish();
+    }
+
+    private void showAddFriendPopup() {
+        Dialog popupDialog = new Dialog(getActivity());
+
+
+        popupDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        popupDialog.setContentView(R.layout.popup_layout);
+
+        Button closeButton = popupDialog.findViewById(R.id.close_btn);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupDialog.dismiss();
+            }
+        });
+        Button addButton = popupDialog.findViewById(R.id.add_btn);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText friendName = popupDialog.findViewById(R.id.friend_name);
+
+                RequestFriend(mAuth.getCurrentUser(), friendName.getText().toString());
+
+                popupDialog.dismiss();
+            }
+        });
+
+        popupDialog.show();
+    }
+    private void RequestFriend(FirebaseUser user, String friendName){
+        String uid = user.getUid().toString();
+
+        CollectionReference requestFriendCollection = db.collection("requestFriend");
+        CollectionReference userCollection = db.collection("user");
+
+        Query query = userCollection.whereEqualTo("name", friendName);
+
+        query.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            QuerySnapshot snapshots = task.getResult();
+                            if(!snapshots.isEmpty()){
+                                for (QueryDocumentSnapshot document : task.getResult()){
+                                    String uid2 = document.getString("uid");
+                                    Query query2 = requestFriendCollection.whereEqualTo("uid1", uid).whereEqualTo("uid2", uid2);
+                                    query2.get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if(task.isSuccessful()){
+                                                        QuerySnapshot snapshots1 = task.getResult();
+                                                        if(!snapshots1.isEmpty()){
+                                                            Toast.makeText(getActivity(), "이미 요청함", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                        else{
+                                                            Map<String, Object> data = new HashMap<>();
+                                                            data.put("uid1", uid);
+                                                            data.put("uid2", uid2);
+                                                            data.put("timestamp", FieldValue.serverTimestamp());
+                                                            requestFriendCollection.document().set(data);
+                                                            Toast.makeText(getActivity(), "친구 요청 완료", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                }
+                            }else{
+                                Toast.makeText(getActivity(), "해당 이름이 존재 하지 않음", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
     }
 }

@@ -81,17 +81,17 @@ public class NaviActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-//        getUserName(mAuth.getCurrentUser(), new NaviActivity.OnUserNameFetchedListener() {
-//            @Override
-//            public void onUserNameFetched(String name) {
-//                if (name != null) {
-//                    userName = name;
-//                    Log.d(TAG, "User name found : " + userName);
-//                } else {
-//                    Log.d(TAG, "User name not found");
-//                }
-//            }
-//        });
+        getUserName(mAuth.getCurrentUser(), new NaviActivity.OnUserNameFetchedListener() {
+            @Override
+            public void onUserNameFetched(String name) {
+                if (name != null) {
+                    userName = name;
+                    Log.d(TAG, "User name found : " + userName);
+                } else {
+                    Log.d(TAG, "User name not found");
+                }
+            }
+        });
         getFriendList(mAuth.getCurrentUser(), new NaviActivity.OnFriendListFetchedListener() {
             @Override
             public void onFriendListFetched(List<String> list) {
@@ -190,8 +190,6 @@ public class NaviActivity extends AppCompatActivity {
                 });
     }
 
-
-
     public interface OnUserNameFetchedListener {
         void onUserNameFetched(String userName);
     }
@@ -213,9 +211,16 @@ public class NaviActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                String uid1 = document.getString("uid1");
                                 String uid2 = document.getString("uid2");
-                                friendList.add(uid2);
-                                Log.d(TAG, "Success add : " + uid2);
+                                if(uid.equals(uid1)){
+                                    friendList.add(uid2);
+                                    Log.d(TAG, "Success add : " + uid2);
+                                }else if(uid.equals(uid2)){
+                                    friendList.add(uid1);
+                                    Log.d(TAG, "Success add : " + uid1);
+                                }
+
                             }
                             for(String uid : friendList){
                                 UserCollection.document(uid).get()

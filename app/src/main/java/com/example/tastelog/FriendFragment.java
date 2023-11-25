@@ -53,6 +53,7 @@ public class FriendFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private List<String> friendList;
 
     public FriendFragment() {
         // Required empty public constructor
@@ -80,8 +81,7 @@ public class FriendFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            friendList = getArguments().getStringArrayList("friendList");
         }
     }
 
@@ -98,7 +98,7 @@ public class FriendFragment extends Fragment {
 
         binding.friendRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        adapter = new FriendAdapter(getData());
+        adapter = new FriendAdapter(friendList);
         binding.friendRecyclerview.setAdapter(adapter);
         return binding.getRoot();
     }
@@ -112,7 +112,7 @@ public class FriendFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        adapter.setData(getData());
+        adapter.setData(friendList);
         adapter.notifyDataSetChanged();
     }
 
@@ -150,54 +150,5 @@ public class FriendFragment extends Fragment {
             this.list = newData;
         }
     }
-
-    private List<String> getData() {
-        CollectionReference friendsCollection = db.collection("friend");
-        CollectionReference UserCollection = db.collection("user");
-
-        String currentUserUid = mAuth.getCurrentUser().getUid();
-
-        Query query = friendsCollection.whereEqualTo("uid1", currentUserUid);
-
-        List<String> friendList = new ArrayList<>();
-        List<String> friendName = new ArrayList<>();
-        query.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String uid2 = document.getString("uid2");
-                                friendList.add(uid2);
-                                Log.d(TAG, "Success add : " + uid2);
-                            }
-                            for(String uid : friendList){
-                                UserCollection.document(uid).get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if(task.isSuccessful()){
-                                                    DocumentSnapshot userDocument = task.getResult();
-                                                    if (userDocument.exists()) {
-                                                        String userName = userDocument.getString("name");
-                                                        friendName.add(userName);
-                                                        Log.d(TAG, "User Name: " + userName);
-                                                    } else {
-                                                        Log.d(TAG, "User document not found.");
-                                                    }
-                                                } else {
-                                                    Log.w(TAG, "Error getting user document.", task.getException());
-                                                }
-                                            }
-                                        });
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
-        return friendName;
-    }
-
 
 }

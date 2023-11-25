@@ -15,13 +15,18 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.example.tastelog.databinding.ActivityNaviBinding;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NaviActivity extends AppCompatActivity {
 
@@ -32,6 +37,8 @@ public class NaviActivity extends AppCompatActivity {
     private static final String TAG_SETTING = "SettingFragment";
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
+    private String userName;
+    private List<String> friendList;
 
     private ActivityNaviBinding binding;
 
@@ -70,6 +77,34 @@ public class NaviActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        getUserName(mAuth.getCurrentUser(), new NaviActivity.OnUserNameFetchedListener() {
+//            @Override
+//            public void onUserNameFetched(String name) {
+//                if (name != null) {
+//                    userName = name;
+//                    Log.d(TAG, "User name found : " + userName);
+//                } else {
+//                    Log.d(TAG, "User name not found");
+//                }
+//            }
+//        });
+        getFriendList(mAuth.getCurrentUser(), new NaviActivity.OnFriendListFetchedListener() {
+            @Override
+            public void onFriendListFetched(List<String> list) {
+                if(list != null){
+                    friendList = list;
+                    Log.d(TAG, "Friend : ");
+                }else {
+                    Log.d(TAG, "Friend");
+                }
+            }
+        });
+    }
+
     private void initFirebaseAuthAndFireStore() {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
@@ -81,6 +116,12 @@ public class NaviActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         if(fragmentManager.findFragmentByTag(tag) == null){
+            Bundle args = new Bundle();
+            args.putString("userName", userName);
+            if (friendList != null) {
+                args.putStringArrayList("friendList", new ArrayList<>(friendList));
+            }
+            fragment.setArguments(args);
             fragmentTransaction.add(R.id.mainFrameLayout, fragment, tag);
         }
 
@@ -149,7 +190,65 @@ public class NaviActivity extends AppCompatActivity {
                 });
     }
 
+
+
     public interface OnUserNameFetchedListener {
         void onUserNameFetched(String userName);
+    }
+    public void getFriendList(FirebaseUser user, final OnFriendListFetchedListener listener){
+        String uid = user.getUid().toString();
+        CollectionReference friendCollection = db.collection("friend");
+        CollectionReference UserCollection = db.collection("user");
+
+//        Query query = friendCollection.whereEqualTo("uid1", uid);
+        List<String> friendList = new ArrayList<>();
+        List<String> friendName = new ArrayList<>();
+        Query query = friendCollection.where(Filter.or(
+                Filter.equalTo("uid1", uid),
+                Filter.equalTo("uid2", uid)
+        ));
+        query.get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String uid2 = document.getString("uid2");
+                                friendList.add(uid2);
+                                Log.d(TAG, "Success add : " + uid2);
+                            }
+                            for(String uid : friendList){
+                                UserCollection.document(uid).get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if(task.isSuccessful()){
+                                                    DocumentSnapshot userDocument = task.getResult();
+                                                    if (userDocument.exists()) {
+                                                        String userName = userDocument.getString("name");
+                                                        friendName.add(userName);
+                                                        Log.d(TAG, "User Name: " + userName);
+                                                    } else {
+                                                        Log.d(TAG, "User document not found.");
+                                                        listener.onFriendListFetched(null);
+                                                    }
+                                                } else {
+                                                    Log.w(TAG, "Error getting user document.", task.getException());
+                                                    listener.onFriendListFetched(null);
+                                                }
+                                            }
+                                        });
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                            listener.onFriendListFetched(null);
+                        }
+                    }
+                });
+        listener.onFriendListFetched(friendName);
+    }
+
+    public interface OnFriendListFetchedListener {
+        void onFriendListFetched(List<String> friendList);
     }
 }

@@ -44,7 +44,7 @@ public class SettingFragment extends Fragment {
     private FirebaseAuth mAuth;
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private String userName;
     private String mParam2;
 
 
@@ -74,8 +74,7 @@ public class SettingFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            userName = getArguments().getString("userName");
         }
     }
 
@@ -85,16 +84,7 @@ public class SettingFragment extends Fragment {
 //        return inflater.inflate(R.layout.fragment_setting, container, false);
         binding = FragmentSettingBinding.inflate(getLayoutInflater());
         initFirebaseAuthAndFireStore();
-        ((NaviActivity) requireActivity()).getUserName(mAuth.getCurrentUser(), new NaviActivity.OnUserNameFetchedListener() {
-            @Override
-            public void onUserNameFetched(String userName) {
-                if (userName != null) {
-                    binding.userId.setText(userName);
-                } else {
-                    Log.d(TAG, "User name not found");
-                }
-            }
-        });
+        binding.userId.setText(userName);
 
         binding.changePasswordBtn.setOnClickListener(new View.OnClickListener() {
             @Override

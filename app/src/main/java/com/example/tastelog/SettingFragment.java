@@ -41,7 +41,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,6 +60,8 @@ public class SettingFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final String TAG_SETTING = "SettingFragment";
+    private static final String TAG_REQUEST = "FriendRequestFragment";
     private FragmentSettingBinding binding;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
@@ -65,6 +69,8 @@ public class SettingFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String userName;
     private String mParam2;
+
+    private List<String> friendList;
 
 
     public SettingFragment() {
@@ -94,6 +100,7 @@ public class SettingFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             userName = getArguments().getString("userName");
+            friendList = getArguments().getStringArrayList("friendList");
         }
     }
 
@@ -144,6 +151,21 @@ public class SettingFragment extends Fragment {
             }
         });
 
+        binding.requestReceiveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                FriendRequestFragment friendRequestFragment = new FriendRequestFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putStringArrayList("friendList", new ArrayList<>(friendList));
+                friendRequestFragment.setArguments(bundle);
+
+                transaction.replace(R.id.mainFrameLayout, friendRequestFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
 
         return binding.getRoot();

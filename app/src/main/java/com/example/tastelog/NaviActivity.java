@@ -3,18 +3,18 @@ package com.example.tastelog;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.tastelog.databinding.ActivityNaviBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -22,8 +22,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import android.os.Bundle;
 import android.util.Log;
-
-import com.example.tastelog.databinding.ActivityNaviBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -255,5 +253,26 @@ public class NaviActivity extends AppCompatActivity {
 
     public interface OnFriendListFetchedListener {
         void onFriendListFetched(List<String> friendList);
+    }
+
+    class MyPagerAdapter extends FragmentStateAdapter {
+        List<Fragment> fragments;
+        MyPagerAdapter(FragmentActivity activity) {
+            super(activity);
+            fragments = new ArrayList<>();
+            fragments.add(new LeftHomeFragment());
+            fragments.add(new RightHomeFragment());
+        }
+
+        @Override
+        public int getItemCount() {
+            return fragments.size();
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return fragments.get(position);
+        }
     }
 }

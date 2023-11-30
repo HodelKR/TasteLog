@@ -36,6 +36,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.Filter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -151,22 +152,6 @@ public class SettingFragment extends Fragment {
             }
         });
 
-        binding.requestReceiveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                FriendRequestFragment friendRequestFragment = new FriendRequestFragment();
-
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("friendList", new ArrayList<>(friendList));
-                friendRequestFragment.setArguments(bundle);
-
-                transaction.replace(R.id.mainFrameLayout, friendRequestFragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
-
 
         return binding.getRoot();
     }
@@ -216,7 +201,7 @@ public class SettingFragment extends Fragment {
     private void RequestFriend(FirebaseUser user, String friendName){
         String uid = user.getUid().toString();
 
-        CollectionReference requestFriendCollection = db.collection("requestFriend");
+        CollectionReference friendCollection = db.collection("friend");
         CollectionReference userCollection = db.collection("user");
 
         Query query = userCollection.whereEqualTo("name", friendName);
@@ -230,7 +215,10 @@ public class SettingFragment extends Fragment {
                             if(!snapshots.isEmpty()){
                                 for (QueryDocumentSnapshot document : task.getResult()){
                                     String uid2 = document.getString("uid");
-                                    Query query2 = requestFriendCollection.whereEqualTo("uid1", uid).whereEqualTo("uid2", uid2);
+                                    Query query2 = friendCollection.where(Filter.or(
+                                            Filter.and(Filter.equalTo("uid1", uid), Filter.equalTo("uid2", uid2)),
+                                            Filter.and(Filter.equalTo("uid1", uid2), Filter.equalTo("uid2", uid))
+                                    ));
                                     query2.get()
                                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                                 @Override
@@ -238,22 +226,22 @@ public class SettingFragment extends Fragment {
                                                     if(task.isSuccessful()){
                                                         QuerySnapshot snapshots1 = task.getResult();
                                                         if(!snapshots1.isEmpty()){
-                                                            Toast.makeText(getActivity(), "이미 요청함", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(getActivity(), "이미 친구입니다.", Toast.LENGTH_SHORT).show();
                                                         }
                                                         else{
                                                             Map<String, Object> data = new HashMap<>();
                                                             data.put("uid1", uid);
                                                             data.put("uid2", uid2);
                                                             data.put("timestamp", FieldValue.serverTimestamp());
-                                                            requestFriendCollection.document().set(data);
-                                                            Toast.makeText(getActivity(), "친구 요청 완료", Toast.LENGTH_SHORT).show();
+                                                            friendCollection.document().set(data);
+                                                            Toast.makeText(getActivity(), "친구가 되었습니다.", Toast.LENGTH_SHORT).show();
                                                         }
                                                     }
                                                 }
                                             });
                                 }
                             }else{
-                                Toast.makeText(getActivity(), "해당 이름이 존재 하지 않음", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "해당 이름이 존재하지 않습니다.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

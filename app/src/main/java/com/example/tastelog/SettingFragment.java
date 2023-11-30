@@ -230,7 +230,9 @@ public class SettingFragment extends Fragment {
                                                         }
                                                         else{
                                                             Map<String, Object> data = new HashMap<>();
+                                                            data.put("name1", userName);
                                                             data.put("uid1", uid);
+                                                            data.put("name2", friendName);
                                                             data.put("uid2", uid2);
                                                             data.put("timestamp", FieldValue.serverTimestamp());
                                                             friendCollection.document().set(data);

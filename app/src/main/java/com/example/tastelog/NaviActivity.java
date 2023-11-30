@@ -35,7 +35,6 @@ public class NaviActivity extends AppCompatActivity {
     private static final String TAG_FRIEND = "FriendFragment";
     private static final String TAG_BOOKMARK = "BookmarkFragment";
     private static final String TAG_SETTING = "SettingFragment";
-    private static final String TAG_REQUEST = "FriendRequestFragment";
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private String userName;
@@ -130,7 +129,6 @@ public class NaviActivity extends AppCompatActivity {
         Fragment friend = fragmentManager.findFragmentByTag(TAG_FRIEND);
         Fragment bookmark = fragmentManager.findFragmentByTag(TAG_BOOKMARK);
         Fragment setting = fragmentManager.findFragmentByTag(TAG_SETTING);
-        Fragment request = fragmentManager.findFragmentByTag(TAG_REQUEST);
 
         if(home != null){
             fragmentTransaction.hide(home);
@@ -143,9 +141,6 @@ public class NaviActivity extends AppCompatActivity {
         }
         if(setting != null){
             fragmentTransaction.hide(setting);
-        }
-        if(request != null){
-            fragmentTransaction.hide(request);
         }
 
 
@@ -164,10 +159,6 @@ public class NaviActivity extends AppCompatActivity {
         }else if(tag.equals(TAG_SETTING)){
             if(setting != null){
                 fragmentTransaction.show(setting);
-            }
-        }else if(tag.equals(TAG_REQUEST)){
-            if(request != null){
-                fragmentTransaction.show(request);
             }
         }
         fragmentTransaction.commitAllowingStateLoss();

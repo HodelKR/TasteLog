@@ -13,8 +13,8 @@ public class HomePagerAdapter extends FragmentStateAdapter {
     public HomePagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
         fragments = new ArrayList<>();
-        fragments.add(new RightHomeFragment());
         fragments.add(new LeftHomeFragment());
+        fragments.add(new RightHomeFragment());
     }
 
     @NonNull

@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.io.File;
 import java.io.InputStream;
 
 public class AddActivity extends AppCompatActivity {
@@ -29,6 +30,34 @@ public class AddActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_add);
 
+        Intent intentFrom = getIntent();
+
+        File file = new File(getFilesDir(), "emptyPicture.jpg");
+        Uri fileUri = Uri.fromFile(file);
+
+        Bitmap bm = BitmapFactory.decodeFile(getFilesDir() + "/" + "emptyPicture.jpg");
+        ImageView imageView = findViewById(R.id.img);
+        imageView.setImageBitmap(bm);
+
+        Button addBtn = findViewById(R.id.add_btn);
+        EditText editText = findViewById(R.id.editText);
+
+        addBtn.setOnClickListener(v -> {
+
+            String category = intentFrom.getExtras().getString("category");
+            String comment = editText.getText().toString();
+
+            DBHelper helper = new DBHelper(this);
+            SQLiteDatabase db = helper.getWritableDatabase();
+
+            db.execSQL("insert into tb_favorite (category, comment, image) values (?,?,?)",
+                    new String[]{category, comment, fileUri.toString()});
+            db.close();
+
+            finish();
+        });
+
+        /*
         Intent intentFrom = getIntent();
 
         ImageView imageBox = findViewById(R.id.imageBox);
@@ -89,6 +118,7 @@ public class AddActivity extends AppCompatActivity {
         cancelBtn.setOnClickListener(v -> {
             finish();
         });
+        */
     }
 
     private int calculateInSampleSize(Uri fileUri, int reqWidth, int reqHeight) {

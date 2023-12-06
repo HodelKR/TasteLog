@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.example.tastelog.databinding.ActivityFavoriteBinding;
 import com.example.tastelog.databinding.RecyclerviewItemBinding;
@@ -48,26 +49,6 @@ public class FavoriteActivity extends AppCompatActivity{
             intent1.putExtra("category", title);
             startActivity(intent1);
         });
-
-        DBHelper helper = new DBHelper(this);
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        Cursor cursor = db.rawQuery("select category, comment from " + "tb_favorite"
-                + " order by _id desc", null);
-        int cnt = cursor.getCount();
-
-        List<String> list = new ArrayList<>();
-
-        for (int i = 0; i < cnt; i++) {
-            cursor.moveToNext();
-            String category = cursor.getString(0);
-            String comment = cursor.getString(1);
-            if(title.equals(category)) list.add("카테고리 : " + category + ", 설명 : " + comment);
-        }
-
-        RecyclerView recyclerView = findViewById(R.id.favorite_list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new ItemAdapter(list));
     }
 
     @Override
